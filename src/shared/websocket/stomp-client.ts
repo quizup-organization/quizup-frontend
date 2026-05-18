@@ -3,7 +3,7 @@ import SockJS from 'sockjs-client'
 
 let stompClient: Client | null = null
 
-export function getStompClient(serviceName:string, accessToken: string): Client {
+export function getStompClient(serviceName: string, accessToken: string): Client {
     if (stompClient) {
         return stompClient
     }

@@ -52,6 +52,6 @@ export function useStompSubscription<T>({
             subscriptionRef.current?.unsubscribe()
             subscriptionRef.current = null
         }
-    }, [destination, enabled, user?.access_token])
+    }, [destination, enabled, serviceName, user?.access_token])
 }
 

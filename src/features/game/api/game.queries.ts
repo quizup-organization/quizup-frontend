@@ -41,9 +41,27 @@ export function useCreateBotGame() {
   })
 }
 
+export function useJoinGame() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (gameId: string) => gameApi.joinGame(gameId),
+    onSuccess: (_, gameId) => {
+      void queryClient.invalidateQueries({ queryKey: GAME_QUERY_KEYS.game(gameId) })
+      void queryClient.invalidateQueries({ queryKey: GAME_QUERY_KEYS.notifications(gameId) })
+    },
+  })
+}
+
 export function useAnswerQuestion(gameId: string) {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (body: AnswerQuestionRequest) => gameApi.answerQuestion(gameId, body),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: GAME_QUERY_KEYS.game(gameId) })
+      void queryClient.invalidateQueries({ queryKey: GAME_QUERY_KEYS.notifications(gameId) })
+    },
   })
 }
 
