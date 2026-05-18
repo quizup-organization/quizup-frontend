@@ -6,6 +6,7 @@ export function useGameWebSocket(gameId: string | null) {
   const applyNotification = useGameStore((state) => state.applyNotification)
 
   useStompSubscription<GameNotification>({
+    serviceName: 'game-service',
     destination: `/topic/games/${gameId}`,
     onMessage: (notification) => applyNotification(notification),
     enabled: Boolean(gameId),

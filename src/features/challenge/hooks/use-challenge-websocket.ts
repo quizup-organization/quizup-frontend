@@ -3,6 +3,7 @@ import { useStompSubscription } from '@/shared/websocket/use-stomp-subscription'
 
 export function useChallengeWebSocket(challengeId: string | null) {
   useStompSubscription({
+    serviceName: "theme-service",
     destination: `/topic/challenges/${challengeId}`,
     onMessage: () => queryClient.invalidateQueries({ queryKey: ['challenges'] }),
     enabled: Boolean(challengeId),
