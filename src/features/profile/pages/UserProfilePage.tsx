@@ -1,15 +1,14 @@
-import { useParams } from 'react-router-dom'
-import { useUser } from '@/features/identity/api/identity.queries'
+import { Clock3 } from 'lucide-react'
+import { EmptyState } from '@/shared/ui/EmptyState'
 
 export default function UserProfilePage() {
-  const { userId = '' } = useParams()
-  const { data } = useUser(userId)
-
   return (
-    <div className="flex flex-col gap-2">
-      <h2 className="text-xl font-semibold">Profil utilisateur</h2>
-      <p>User ID: {data?.userId}</p>
-      <p>Email: {data?.email}</p>
+    <div className="max-w-2xl">
+      <EmptyState
+        icon={Clock3}
+        title="Profil utilisateur bientot disponible"
+        description="Les profils publics arrivent dans une prochaine iteration du frontend."
+      />
     </div>
   )
 }

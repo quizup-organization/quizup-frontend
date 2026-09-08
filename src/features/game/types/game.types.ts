@@ -69,3 +69,51 @@ export interface RoundStartedNotification extends GameNotification {
   bonus: boolean
 }
 
+export interface PlayerJoinedNotification extends GameNotification {
+  type: 'PLAYER_JOINED'
+  playerId: string
+}
+
+export interface GameStartedNotification extends GameNotification {
+  type: 'GAME_STARTED'
+  mode: GameMode
+}
+
+export interface PlayerAnsweredNotification extends GameNotification {
+  type: 'PLAYER_ANSWERED'
+  round: GameRoundType
+  playerId: string
+  choice: QuestionChoice
+  correct: boolean
+  pointsEarned: number
+  answeredAt: string
+}
+
+export interface RoundClosedNotification extends GameNotification {
+  type: 'ROUND_CLOSED'
+  closedRound: GameRoundType
+  nextRound: GameRoundType | null
+}
+
+export interface GameEndedNotification extends GameNotification {
+  type: 'GAME_ENDED'
+  winnerId: string | null
+  player1FinalScore: number
+  player2FinalScore: number
+}
+
+export interface GameCancelledNotification extends GameNotification {
+  type: 'GAME_CANCELLED'
+  reason: string
+}
+
+export type GameNotificationPayload =
+  | RoundStartedNotification
+  | PlayerJoinedNotification
+  | GameStartedNotification
+  | PlayerAnsweredNotification
+  | RoundClosedNotification
+  | GameEndedNotification
+  | GameCancelledNotification
+  | GameNotification
+

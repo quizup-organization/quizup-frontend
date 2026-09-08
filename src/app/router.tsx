@@ -11,8 +11,7 @@ const GameListPage = lazy(() => import('@/features/game/pages/GameListPage'))
 const GamePage = lazy(() => import('@/features/game/pages/GamePage'))
 const MatchmakingPage = lazy(() => import('@/features/matchmaking/pages/MatchmakingPage'))
 const LobbyWaitingPage = lazy(() => import('@/features/matchmaking/pages/LobbyWaitingPage'))
-const ChallengeListPage = lazy(() => import('@/features/challenge/pages/ChallengeListPage'))
-const FriendListPage = lazy(() => import('@/features/social/pages/FriendListPage'))
+const SocialPage = lazy(() => import('@/features/social/pages/SocialPage'))
 const MyProfilePage = lazy(() => import('@/features/profile/pages/MyProfilePage'))
 const UserProfilePage = lazy(() => import('@/features/profile/pages/UserProfilePage'))
 const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPage'))
@@ -37,8 +36,9 @@ export function AppRouter() {
           <Route path="games/:gameId" element={<GamePage />} />
           <Route path="matchmaking" element={<MatchmakingPage />} />
           <Route path="matchmaking/lobby/:lobbyId" element={<LobbyWaitingPage />} />
-          <Route path="challenges" element={<ChallengeListPage />} />
-          <Route path="friends" element={<FriendListPage />} />
+          <Route path="social" element={<SocialPage />} />
+          <Route path="friends" element={<Navigate to="/social" replace />} />
+          <Route path="challenges" element={<Navigate to="/social" replace />} />
           <Route path="profile" element={<MyProfilePage />} />
           <Route path="profile/:userId" element={<UserProfilePage />} />
         </Route>

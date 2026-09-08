@@ -2,7 +2,6 @@ import {
   BookOpen,
   Gamepad2,
   Swords,
-  Trophy,
   User,
   Users,
 } from 'lucide-react'
@@ -16,8 +15,7 @@ const navItems = [
   { to: '/topics', label: 'Topics', icon: BookOpen },
   { to: '/matchmaking', label: 'Matchmaking', icon: Swords },
   { to: '/games', label: 'Parties', icon: Gamepad2 },
-  { to: '/challenges', label: 'Defis', icon: Trophy },
-  { to: '/friends', label: 'Amis', icon: Users },
+  { to: '/social', label: 'Social', icon: Users },
   { to: '/profile', label: 'Profil', icon: User },
 ]
 
@@ -26,6 +24,7 @@ export function MainLayout() {
 
   const pendingFriendRequests = useNotificationStore((state) => state.pendingFriendRequests)
   const pendingChallenges = useNotificationStore((state) => state.pendingChallenges)
+  const pendingSocial = pendingFriendRequests + pendingChallenges
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[220px_1fr]">
@@ -34,8 +33,7 @@ export function MainLayout() {
         <nav className="flex flex-col gap-2">
           {navItems.map((item) => {
             const Icon = item.icon
-            const count =
-              item.to === '/friends' ? pendingFriendRequests : item.to === '/challenges' ? pendingChallenges : 0
+            const count = item.to === '/social' ? pendingSocial : 0
 
             return (
               <NavLink
