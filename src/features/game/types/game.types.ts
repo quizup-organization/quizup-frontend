@@ -2,13 +2,7 @@ export type GameMode = 'SYNC' | 'ASYNC'
 export type GamePlayerType = 'BOT' | 'HUMAN'
 export type GameStatus = 'CREATED' | 'READY' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELED'
 export type GameRoundType =
-  | 'ROUND_1'
-  | 'ROUND_2'
-  | 'ROUND_3'
-  | 'ROUND_4'
-  | 'ROUND_5'
-  | 'ROUND_6'
-  | 'ROUND_7'
+  'ROUND_1' | 'ROUND_2' | 'ROUND_3' | 'ROUND_4' | 'ROUND_5' | 'ROUND_6' | 'ROUND_7'
 export type GameRoundStatus = 'CREATED' | 'STARTED' | 'CLOSED'
 export type QuestionChoice = 'A' | 'B' | 'C' | 'D'
 
@@ -116,4 +110,3 @@ export type GameNotificationPayload =
   | GameEndedNotification
   | GameCancelledNotification
   | GameNotification
-

@@ -109,7 +109,8 @@ export const useGameStore = create<GameState>((set) => ({
               ...scoreUpdate,
             },
             hasAnswered: state.currentUserId === event.playerId ? true : state.hasAnswered,
-            opponentAnswered: state.currentUserId !== event.playerId ? true : state.opponentAnswered,
+            opponentAnswered:
+              state.currentUserId !== event.playerId ? true : state.opponentAnswered,
           }
         })
         return
@@ -127,7 +128,9 @@ export const useGameStore = create<GameState>((set) => ({
             }
           }
 
-          const matchingRound = state.currentGame?.rounds.find((round) => round.round === event.closedRound)
+          const matchingRound = state.currentGame?.rounds.find(
+            (round) => round.round === event.closedRound,
+          )
 
           return {
             currentRound: event.nextRound,
@@ -208,4 +211,3 @@ export const useGameStore = create<GameState>((set) => ({
       countdown: 0,
     }),
 }))
-

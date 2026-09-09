@@ -1,9 +1,4 @@
-import {
-  BookOpen,
-  Gamepad2,
-  Swords,
-  Users,
-} from 'lucide-react'
+import { BookOpen, Gamepad2, Swords, Users } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -65,4 +60,3 @@ export function MainLayout() {
     </div>
   )
 }
-

@@ -4,7 +4,8 @@ import type { CreateChallengeRequest } from '../types/social.types'
 import * as socialApi from './social.api'
 
 export const SOCIAL_QUERY_KEYS = {
-  friendRequests: (search: SearchRequest) => ['social', 'friend-requests', 'search', search] as const,
+  friendRequests: (search: SearchRequest) =>
+    ['social', 'friend-requests', 'search', search] as const,
   friendships: (search: SearchRequest) => ['social', 'friendships', 'search', search] as const,
   challenges: (search: SearchRequest) => ['social', 'challenges', 'search', search] as const,
   challenge: (challengeId: string) => ['social', 'challenges', challengeId] as const,
@@ -110,4 +111,3 @@ export function useDeclineChallenge() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['social'] }),
   })
 }
-

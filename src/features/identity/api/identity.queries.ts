@@ -29,4 +29,3 @@ export function useUsers(search: SearchRequest) {
     queryFn: () => searchUsers(search),
   })
 }
-

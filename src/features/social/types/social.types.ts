@@ -110,4 +110,3 @@ export type SocialNotification =
   | ChallengeAcceptedNotification
   | ChallengeDeclinedNotification
   | ChallengeExpiredNotification
-

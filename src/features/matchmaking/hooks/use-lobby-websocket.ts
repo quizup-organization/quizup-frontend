@@ -6,7 +6,6 @@ export function useLobbyWebSocket(lobbyId: string | null) {
   const navigate = useNavigate()
 
   useStompSubscription<LobbyNotification>({
-    serviceName: "matchmaking-service",
     destination: `/topic/lobbies/${lobbyId}`,
     onMessage: (notification) => {
       if (notification.type === 'COMPLETED') {
@@ -17,4 +16,3 @@ export function useLobbyWebSocket(lobbyId: string | null) {
     enabled: Boolean(lobbyId),
   })
 }
-

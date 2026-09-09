@@ -1,13 +1,19 @@
-import axios from 'axios'
+import axios, { type AxiosError } from 'axios'
+import { normalizeError, type ProblemDetails } from '@/shared/types/error.types'
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_GATEWAY_BASE_URL,
+  baseURL: import.meta.env.VITE_API_GATEWAY_BASE_URL ?? '/api',
   headers: { 'Content-Type': 'application/json' },
 })
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error),
+  (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      ;(error as AxiosError & { data?: ProblemDetails | null }).data = normalizeError(error)
+    }
+    return Promise.reject(error)
+  },
 )
 
 export function setAuthToken(token: string | null) {
@@ -17,4 +23,3 @@ export function setAuthToken(token: string | null) {
   }
   delete axiosInstance.defaults.headers.common.Authorization
 }
-

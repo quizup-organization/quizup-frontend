@@ -7,4 +7,3 @@ export interface UserResponse {
   linkedSocialAccounts: SocialProvider[]
   createdAt: string
 }
-

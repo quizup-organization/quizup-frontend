@@ -12,4 +12,3 @@ export function UserCard({ user }: UserCardProps) {
     </div>
   )
 }
-

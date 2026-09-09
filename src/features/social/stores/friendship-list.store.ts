@@ -5,4 +5,3 @@ export const useFriendshipListSearchStore = createPaginationSearchStore({
   defaultSorts: [{ property: 'friendsSince', direction: 'DESC' }],
   defaultPage: { number: 0, size: 10 },
 })
-

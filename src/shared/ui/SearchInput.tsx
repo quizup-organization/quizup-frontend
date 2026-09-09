@@ -7,7 +7,10 @@ interface SearchInputProps {
   onDebouncedChange: (value: string) => void
 }
 
-export function SearchInput({ placeholder = 'Rechercher...', onDebouncedChange }: SearchInputProps) {
+export function SearchInput({
+  placeholder = 'Rechercher...',
+  onDebouncedChange,
+}: SearchInputProps) {
   const [value, setValue] = useState('')
   const debounced = useDebounce(value)
 
@@ -15,6 +18,11 @@ export function SearchInput({ placeholder = 'Rechercher...', onDebouncedChange }
     onDebouncedChange(debounced)
   }, [debounced, onDebouncedChange])
 
-  return <Input value={value} onChange={(event) => setValue(event.target.value)} placeholder={placeholder} />
+  return (
+    <Input
+      value={value}
+      onChange={(event) => setValue(event.target.value)}
+      placeholder={placeholder}
+    />
+  )
 }
-

@@ -21,12 +21,10 @@ export const useNotificationStore = create<NotificationState>((set) => ({
   events: [],
   incrementFriendRequests: () =>
     set((state) => ({ pendingFriendRequests: state.pendingFriendRequests + 1 })),
-  incrementChallenges: () =>
-    set((state) => ({ pendingChallenges: state.pendingChallenges + 1 })),
+  incrementChallenges: () => set((state) => ({ pendingChallenges: state.pendingChallenges + 1 })),
   addEvent: (event) =>
     set((state) => ({
       events: [...state.events, event],
     })),
   clearEvents: () => set({ events: [] }),
 }))
-

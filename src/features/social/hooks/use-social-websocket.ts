@@ -12,42 +12,40 @@ export function useSocialWebSocket() {
   const incrementChallenges = useNotificationStore((state) => state.incrementChallenges)
 
   useStompSubscription<SocialNotification>({
-    serviceName: 'social-service',
     destination: `/topic/social/${userId}`,
     onMessage: (notification) => {
       switch (notification.type) {
         case 'FRIEND_REQUEST_RECEIVED':
           incrementFriendRequests()
-          toast.success('Nouvelle demande d\'ami recue')
+          toast.success('Nouvelle demande d’ami reçue')
           void queryClient.invalidateQueries({ queryKey: ['social', 'friend-requests'] })
           return
         case 'FRIEND_REQUEST_ACCEPTED':
-          toast.success('Demande d\'ami acceptee')
+          toast.success('Demande d’ami acceptée')
           void queryClient.invalidateQueries({ queryKey: ['social', 'friendships'] })
           return
         case 'FRIEND_REQUEST_REJECTED':
-          toast.info('Demande d\'ami rejetee')
+          toast.info('Demande d’ami rejetée')
           void queryClient.invalidateQueries({ queryKey: ['social', 'friend-requests'] })
           return
         case 'CHALLENGE_RECEIVED':
           incrementChallenges()
-          toast.success('Nouveau defi recu')
+          toast.success('Nouveau défi reçu')
           void queryClient.invalidateQueries({ queryKey: ['social', 'challenges'] })
           return
         case 'CHALLENGE_ACCEPTED':
-          toast.success('Defi accepte')
+          toast.success('Défi accepté')
           void queryClient.invalidateQueries({ queryKey: ['social', 'challenges'] })
           return
         case 'CHALLENGE_DECLINED':
-          toast.info('Defi refuse')
+          toast.info('Défi refusé')
           void queryClient.invalidateQueries({ queryKey: ['social', 'challenges'] })
           return
         case 'CHALLENGE_EXPIRED':
-          toast.info('Defi expire')
+          toast.info('Défi expiré')
           void queryClient.invalidateQueries({ queryKey: ['social', 'challenges'] })
       }
     },
     enabled: Boolean(userId),
   })
 }
-

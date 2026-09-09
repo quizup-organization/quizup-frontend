@@ -5,6 +5,7 @@ import { useMe } from '@/features/identity/api/identity.queries'
 import { useParams } from 'react-router-dom'
 import { useAnswerQuestion, useGame, useGameNotifications, useJoinGame } from '../api/game.queries'
 import { useGameWebSocket } from '../hooks/use-game-websocket'
+import { getProblemDetails } from '@/shared/types/error.types'
 import { useGameStore } from '../stores/game.store'
 import type { GameNotificationPayload, QuestionChoice } from '../types/game.types'
 
@@ -93,7 +94,10 @@ export default function GamePage() {
   const onJoin = () => {
     joinGame.mutate(gameId, {
       onSuccess: () => toast.success('Partie rejointe'),
-      onError: () => toast.error('Impossible de rejoindre la partie'),
+      onError: (error) => {
+        const problem = getProblemDetails(error)
+        toast.error(problem ? problem.detail : 'Impossible de rejoindre la partie')
+      },
     })
   }
 
@@ -104,9 +108,12 @@ export default function GamePage() {
       {
         onSuccess: () => {
           setHasAnswered(true)
-          toast.success('Reponse envoyee')
+          toast.success('Réponse envoyée')
         },
-        onError: () => toast.error('Echec de l\'envoi de la reponse'),
+        onError: (error) => {
+          const problem = getProblemDetails(error)
+          toast.error(problem ? problem.detail : "Échec de l'envoi de la réponse")
+        },
       },
     )
   }
@@ -169,7 +176,9 @@ export default function GamePage() {
 
       <div className="flex items-center gap-2 px-3 pb-2 pt-3">
         <div className="flex flex-1 items-center gap-2">
-          <div className="flex size-10 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-lg">🦊</div>
+          <div className="flex size-10 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-lg">
+            🦊
+          </div>
           <div>
             <p className="text-xs font-bold">{leftName}</p>
             <p className="text-2xl font-black leading-none text-yellow-400">{leftScore}</p>
@@ -177,8 +186,14 @@ export default function GamePage() {
         </div>
 
         <div className="min-w-14 text-center">
-          <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-cyan-400">Time Left</p>
-          <p className={`text-3xl font-black leading-none ${countdown <= 3 ? 'text-red-500' : 'text-white'}`}>{countdown}</p>
+          <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-cyan-400">
+            Time Left
+          </p>
+          <p
+            className={`text-3xl font-black leading-none ${countdown <= 3 ? 'text-red-500' : 'text-white'}`}
+          >
+            {countdown}
+          </p>
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-2">
@@ -186,7 +201,9 @@ export default function GamePage() {
             <p className="text-xs font-bold">{rightName}</p>
             <p className="text-2xl font-black leading-none text-emerald-400">{rightScore}</p>
           </div>
-          <div className="flex size-10 items-center justify-center rounded-full border-2 border-emerald-500 bg-zinc-900 text-lg">🐺</div>
+          <div className="flex size-10 items-center justify-center rounded-full border-2 border-emerald-500 bg-zinc-900 text-lg">
+            🐺
+          </div>
         </div>
       </div>
 
@@ -195,22 +212,24 @@ export default function GamePage() {
           <div className="rounded-xl border border-red-800 bg-red-950/30 p-4 text-center">
             <p className="text-4xl">🚪</p>
             <p className="mt-2 text-lg font-black">Forfait</p>
-            <p className="text-sm text-zinc-400">L'adversaire a quitte la partie.</p>
+            <p className="text-sm text-zinc-400">L'adversaire a quitté la partie.</p>
             <div className="mt-4 flex gap-2">
               <Button className="flex-1 bg-red-600 text-white hover:bg-red-500" disabled>
-                Partie annulee
+                Partie annulée
               </Button>
             </div>
           </div>
         </div>
       ) : status === 'FINISHED' || isFinished ? (
         <div className="flex h-[calc(100%-92px)] flex-col px-4 pb-5 pt-2">
-          <p className={`text-center text-4xl font-black ${isWinner ? 'text-emerald-400' : 'text-red-500'}`}>
-            {isWinner ? 'GAGNE !' : 'PERDU !'}
+          <p
+            className={`text-center text-4xl font-black ${isWinner ? 'text-emerald-400' : 'text-red-500'}`}
+          >
+            {isWinner ? 'GAGNÉ !' : 'PERDU !'}
           </p>
 
           <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-950 p-4">
-            <p className="text-center text-sm text-zinc-400">Resultat du duel</p>
+            <p className="text-center text-sm text-zinc-400">Résultat du duel</p>
             <p className="mt-1 text-center text-2xl font-black">
               {leftScore} <span className="text-zinc-600">VS</span> {rightScore}
             </p>
@@ -263,7 +282,7 @@ export default function GamePage() {
             <div className="flex-1">
               <p className="text-xs text-zinc-500">XP pour niveau 2</p>
               <p className="text-2xl font-black text-red-500">{totalXp} XP</p>
-              <p className="text-[11px] text-zinc-500">XP gagnee</p>
+              <p className="text-[11px] text-zinc-500">XP gagnée</p>
             </div>
           </div>
 
@@ -278,12 +297,14 @@ export default function GamePage() {
           <div className="relative min-h-[230px] px-6 pb-2 pt-6 text-center">
             <div className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-yellow-500" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-1 bg-emerald-500" />
-            <p className="text-[28px] font-extrabold leading-tight">{currentQuestion?.text ?? 'En attente de la prochaine question...'}</p>
+            <p className="text-[28px] font-extrabold leading-tight">
+              {currentQuestion?.text ?? 'En attente de la prochaine question...'}
+            </p>
           </div>
 
           {countdown === 0 && !hasAnswered && currentQuestion ? (
             <div className="mx-3 mb-2 rounded-xl border border-red-800 bg-red-950/30 p-3">
-              <p className="text-base font-bold text-red-400">Temps ecoule</p>
+              <p className="text-base font-bold text-red-400">Temps écoulé</p>
               <p className="text-xs text-zinc-400">Aucun point attribue pour cette question.</p>
             </div>
           ) : null}
@@ -302,7 +323,9 @@ export default function GamePage() {
                   disabled={!canAnswer || answerQuestion.isPending}
                 >
                   {option.label}
-                  {isSelected ? <span className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-yellow-400" /> : null}
+                  {isSelected ? (
+                    <span className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-yellow-400" />
+                  ) : null}
                 </button>
               )
             })}
@@ -311,14 +334,14 @@ export default function GamePage() {
           {hasAnswered && !opponentAnswered ? (
             <div className="mx-3 mb-3 flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-400">
               <span className="text-base">🐺</span>
-              <span>En attente de l'adversaire...</span>
+              <span>En attente de l'adversaire…</span>
             </div>
           ) : null}
 
           {!currentQuestion && revealedRound ? (
             <div className="px-3 pb-3">
               <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-3">
-                <p className="mb-2 text-sm font-bold">Revelation de la reponse</p>
+                <p className="mb-2 text-sm font-bold">Révélation de la réponse</p>
                 <p className="mb-3 text-sm text-zinc-400">{revealedRound.questionText}</p>
                 <div className="flex flex-col gap-2">
                   {(['A', 'B', 'C', 'D'] as QuestionChoice[])
@@ -341,8 +364,12 @@ export default function GamePage() {
                           }`}
                         >
                           {text}
-                          {isMyChoice ? <span className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-yellow-400" /> : null}
-                          {isOpponentChoice ? <span className="absolute inset-y-0 right-0 w-1 rounded-r-2xl bg-emerald-400" /> : null}
+                          {isMyChoice ? (
+                            <span className="absolute inset-y-0 left-0 w-1 rounded-l-2xl bg-yellow-400" />
+                          ) : null}
+                          {isOpponentChoice ? (
+                            <span className="absolute inset-y-0 right-0 w-1 rounded-r-2xl bg-emerald-400" />
+                          ) : null}
                         </div>
                       )
                     })}
@@ -352,7 +379,11 @@ export default function GamePage() {
           ) : null}
 
           <div className="mt-auto flex gap-2 px-3 pb-4">
-            <Button className="flex-1 bg-zinc-800 text-zinc-100 hover:bg-zinc-700" onClick={onJoin} disabled={!canJoin || joinGame.isPending}>
+            <Button
+              className="flex-1 bg-zinc-800 text-zinc-100 hover:bg-zinc-700"
+              onClick={onJoin}
+              disabled={!canJoin || joinGame.isPending}
+            >
               Rejoindre
             </Button>
           </div>
@@ -365,4 +396,3 @@ export default function GamePage() {
     </div>
   )
 }
-

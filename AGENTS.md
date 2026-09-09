@@ -1,8 +1,6 @@
 # AGENTS.md — quizup-frontend
 
-> **Frontend** React 19 + TypeScript, Vite 8, Tailwind 4, shadcn/ui. Hors périmètre de
-> l'architecture hexagonale Java. Pour les patterns backend : [
-`../../best-practices/hexagonal-architecture.md`](../../best-practices/hexagonal-architecture.md).
+> **Frontend** React 19 + TypeScript, Vite 8, Tailwind 4, shadcn/ui.
 
 ---
 
@@ -90,9 +88,9 @@ re-wrapper ces fonctions en React Query (queryKey/invalidation).
 
 ## 6. Configuration (env)
 
-Pas de `.env`/`.env.example` dans le repo — variables référencées en code :
+`.env` (ignoré par git) et `.env.example` (versionné) définissent les variables de dev :
 
-- `VITE_API_GATEWAY_BASE_URL` — baseURL axios + préfixe SockJS (fallback `/api`)
+- `VITE_API_GATEWAY_BASE_URL` — baseURL axios + préfixe SockJS (fallback `/api`). Typé dans `src/vite-env.d.ts`.
 - `VITE_OIDC_BASE_URL` — authority OIDC
 - `VITE_OIDC_CLIENT_ID` — client OIDC
 

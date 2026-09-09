@@ -27,7 +27,9 @@ export default function LobbyWaitingPage() {
 
       <div className="flex items-center gap-2 px-4 pb-2 pt-3">
         <div className="flex flex-1 items-center gap-2">
-          <div className="flex size-10 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-lg">🦊</div>
+          <div className="flex size-10 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-lg">
+            🦊
+          </div>
           <div>
             <p className="text-xs font-bold">Vous</p>
             <p className="text-2xl font-black leading-none text-yellow-400">0</p>
@@ -35,7 +37,9 @@ export default function LobbyWaitingPage() {
         </div>
 
         <div className="min-w-16 text-center">
-          <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-cyan-400">Debut dans</p>
+          <p className="text-[9px] font-extrabold uppercase tracking-[0.16em] text-cyan-400">
+            Début dans
+          </p>
           <p className="text-3xl font-black leading-none">{countdown}</p>
         </div>
 
@@ -51,14 +55,18 @@ export default function LobbyWaitingPage() {
       </div>
 
       <div className="p-4">
-        <p className={`text-center text-sm font-extrabold ${hasChallenger ? 'text-emerald-400' : 'text-zinc-500'}`}>
-          {hasChallenger ? 'Adversaire trouve !' : 'Recherche d\'adversaire...'}
+        <p
+          className={`text-center text-sm font-extrabold ${hasChallenger ? 'text-emerald-400' : 'text-zinc-500'}`}
+        >
+          {hasChallenger ? 'Adversaire trouvé !' : "Recherche d'adversaire…"}
         </p>
 
         <div className="mt-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
           <div className="flex items-center justify-between">
             <div className="text-center">
-              <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-2xl">🦊</div>
+              <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-2xl">
+                🦊
+              </div>
               <p className="mt-2 text-xs font-bold">Vous</p>
             </div>
             <div className="text-center">
@@ -69,17 +77,20 @@ export default function LobbyWaitingPage() {
               <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-emerald-500 bg-zinc-900 text-2xl">
                 {hasChallenger ? '🐺' : '?'}
               </div>
-              <p className="mt-2 text-xs font-bold">{hasChallenger ? 'Adversaire' : 'En attente'}</p>
+              <p className="mt-2 text-xs font-bold">
+                {hasChallenger ? 'Adversaire' : 'En attente'}
+              </p>
             </div>
           </div>
 
           <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-900 p-3 text-sm">
             <p className="font-bold">🎬 {category}</p>
-            <p className="text-xs text-zinc-500">Lobby {lobbyId.slice(0, 8)} · status {lobby?.status ?? 'OPEN'}</p>
+            <p className="text-xs text-zinc-500">
+              Lobby {lobbyId.slice(0, 8)} · status {lobby?.status ?? 'OPEN'}
+            </p>
           </div>
         </div>
       </div>
     </div>
   )
 }
-

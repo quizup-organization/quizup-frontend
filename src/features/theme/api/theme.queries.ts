@@ -84,4 +84,3 @@ export function useRejectQuestion() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['theme', 'questions'] }),
   })
 }
-

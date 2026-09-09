@@ -46,4 +46,3 @@ export function useCancelLobby() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['matchmaking'] }),
   })
 }
-

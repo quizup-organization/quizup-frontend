@@ -5,4 +5,3 @@ export const useUserListSearchStore = createPaginationSearchStore({
   defaultSorts: [{ property: 'createdAt', direction: 'DESC' }],
   defaultPage: { number: 0, size: 20 },
 })
-

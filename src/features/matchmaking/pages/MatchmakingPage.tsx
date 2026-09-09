@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useMe } from '@/features/identity/api/identity.queries'
 import { useTopics } from '@/features/theme/api/theme.queries'
 import { PaginationControls } from '@/shared/ui/PaginationControls'
+import { getProblemDetails } from '@/shared/types/error.types'
 import { useCreateLobby, useJoinLobby, useOpenLobbies } from '../api/matchmaking.queries'
 import { useLobbyListSearchStore } from '../stores/lobby-list.store'
 
@@ -19,7 +20,8 @@ const TOPIC_ICON: Record<string, string> = {
 }
 
 export default function MatchmakingPage() {
-  const { selectedTopicId, filters, page, setSelectedTopicId, setPageNumber } = useLobbyListSearchStore()
+  const { selectedTopicId, filters, page, setSelectedTopicId, setPageNumber } =
+    useLobbyListSearchStore()
   const navigate = useNavigate()
   const me = useMe()
 
@@ -52,7 +54,10 @@ export default function MatchmakingPage() {
         onSuccess: () => {
           toast.success('Recherche en cours...')
         },
-        onError: () => toast.error('Creation de lobby impossible'),
+        onError: (error) => {
+          const problem = getProblemDetails(error)
+          toast.error(problem ? problem.detail : 'Création de lobby impossible')
+        },
       },
     )
   }
@@ -63,7 +68,10 @@ export default function MatchmakingPage() {
         toast.success('Lobby rejoint')
         navigate(`/matchmaking/lobby/${lobbyId}`)
       },
-      onError: () => toast.error('Impossible de rejoindre ce lobby'),
+      onError: (error) => {
+        const problem = getProblemDetails(error)
+        toast.error(problem ? problem.detail : 'Impossible de rejoindre ce lobby')
+      },
     })
   }
 
@@ -77,7 +85,7 @@ export default function MatchmakingPage() {
         value={selectedTopicId}
         onChange={(event) => setSelectedTopicId(event.target.value)}
       >
-        <option value="">Selectionnez un topic publie</option>
+        <option value="">Sélectionnez un topic publié</option>
         {topicsQuery.data?.content.map((topic) => (
           <option key={topic.topicId} value={topic.topicId}>
             {topic.name}
@@ -93,7 +101,9 @@ export default function MatchmakingPage() {
 
         <div className="mt-4 flex items-center justify-between">
           <div className="text-center">
-            <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-2xl">🦊</div>
+            <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-yellow-500 bg-zinc-900 text-2xl">
+              🦊
+            </div>
             <p className="mt-2 text-xs font-bold">{me.data?.userId ? 'Vous' : 'Joueur'}</p>
           </div>
 
@@ -104,7 +114,9 @@ export default function MatchmakingPage() {
           </div>
 
           <div className="text-center">
-            <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-zinc-700 bg-zinc-900 text-2xl text-zinc-600">?</div>
+            <div className="mx-auto flex size-16 items-center justify-center rounded-full border-2 border-zinc-700 bg-zinc-900 text-2xl text-zinc-600">
+              ?
+            </div>
             <p className="mt-2 text-xs font-bold text-zinc-400">Adversaire</p>
           </div>
         </div>
@@ -128,7 +140,9 @@ export default function MatchmakingPage() {
           </div>
         ))}
         {lobbiesQuery.data && lobbiesQuery.data.content.length === 0 ? (
-          <p className="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-sm text-zinc-500">Aucun lobby ouvert pour ce filtre.</p>
+          <p className="rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-sm text-zinc-500">
+            Aucun lobby ouvert pour ce filtre.
+          </p>
         ) : null}
       </div>
 
@@ -147,11 +161,13 @@ export default function MatchmakingPage() {
           onClick={onCreateLobby}
           disabled={!selectedTopicId || createLobby.isPending}
         >
-          Creer un lobby
+          Créer un lobby
         </Button>
 
         {createLobby.isPending ? (
-          <p className="mt-2 text-center text-xs text-zinc-500">Recherche d'adversaire en cours...</p>
+          <p className="mt-2 text-center text-xs text-zinc-500">
+            Recherche d'adversaire en cours...
+          </p>
         ) : null}
 
         {selectedTopic?.topicId ? (
@@ -161,4 +177,3 @@ export default function MatchmakingPage() {
     </div>
   )
 }
-

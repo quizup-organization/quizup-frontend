@@ -28,4 +28,3 @@ export interface LobbyCompletedNotification extends LobbyNotification {
   gameId: string
   vsBot: boolean
 }
-

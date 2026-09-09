@@ -33,4 +33,3 @@ export function ConfirmDialog({ triggerLabel, title, description, onConfirm }: C
     </Dialog>
   )
 }
-

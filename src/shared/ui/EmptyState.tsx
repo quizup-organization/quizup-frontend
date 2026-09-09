@@ -9,7 +9,13 @@ interface EmptyStateProps {
   onAction?: () => void
 }
 
-export function EmptyState({ icon: Icon, title, description, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: EmptyStateProps) {
   return (
     <div className="rounded-lg border bg-card p-6 text-center text-card-foreground">
       <Icon className="mx-auto size-10 text-muted-foreground" />
@@ -23,4 +29,3 @@ export function EmptyState({ icon: Icon, title, description, actionLabel, onActi
     </div>
   )
 }
-

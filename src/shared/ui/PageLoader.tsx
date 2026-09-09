@@ -7,4 +7,3 @@ export function PageLoader() {
     </div>
   )
 }
-

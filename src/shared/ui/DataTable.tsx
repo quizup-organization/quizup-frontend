@@ -54,4 +54,3 @@ export function DataTable<T>({ data, columns, isLoading }: DataTableProps<T>) {
     </Table>
   )
 }
-

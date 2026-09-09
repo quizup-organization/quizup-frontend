@@ -7,6 +7,7 @@ import { MainLayout } from './layouts/MainLayout'
 const TopicListPage = lazy(() => import('@/features/theme/pages/TopicListPage'))
 const TopicDetailPage = lazy(() => import('@/features/theme/pages/TopicDetailPage'))
 const TopicCreatePage = lazy(() => import('@/features/theme/pages/TopicCreatePage'))
+const QuestionCreatePage = lazy(() => import('@/features/theme/pages/QuestionCreatePage'))
 const GameListPage = lazy(() => import('@/features/game/pages/GameListPage'))
 const GamePage = lazy(() => import('@/features/game/pages/GamePage'))
 const MatchmakingPage = lazy(() => import('@/features/matchmaking/pages/MatchmakingPage'))
@@ -30,6 +31,7 @@ export function AppRouter() {
           <Route path="topics" element={<TopicListPage />} />
           <Route path="topics/create" element={<TopicCreatePage />} />
           <Route path="topics/:topicId" element={<TopicDetailPage />} />
+          <Route path="topics/:topicId/questions/new" element={<QuestionCreatePage />} />
           <Route path="games" element={<GameListPage />} />
           <Route path="games/:gameId" element={<GamePage />} />
           <Route path="matchmaking" element={<MatchmakingPage />} />
@@ -43,4 +45,3 @@ export function AppRouter() {
     </Suspense>
   )
 }
-

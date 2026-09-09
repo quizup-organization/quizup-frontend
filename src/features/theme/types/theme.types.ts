@@ -64,4 +64,3 @@ export interface CreateQuestionRequest {
 export interface RejectQuestionRequest {
   reason: string
 }
-

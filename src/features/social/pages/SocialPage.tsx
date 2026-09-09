@@ -5,6 +5,7 @@ import { useMe } from '@/features/identity/api/identity.queries'
 import type { FilterRequest } from '@/shared/types/pagination.types'
 import { PaginationControls } from '@/shared/ui/PaginationControls'
 import { SearchInput } from '@/shared/ui/SearchInput'
+import { getProblemDetails } from '@/shared/types/error.types'
 import {
   useAcceptChallenge,
   useChallenges,
@@ -67,34 +68,43 @@ export default function SocialPage() {
 
   const onRemoveFriendship = (friendshipId: string) => {
     removeFriendship.mutate(friendshipId, {
-      onSuccess: () => toast.success('Amitie supprimee'),
-      onError: () => toast.error('Suppression impossible'),
+      onSuccess: () => toast.success('Amitié supprimée'),
+      onError: (error) => {
+        const problem = getProblemDetails(error)
+        toast.error(problem ? problem.detail : 'Suppression impossible')
+      },
     })
   }
 
   const onAcceptChallenge = (challengeId: string) => {
     acceptChallenge.mutate(challengeId, {
-      onSuccess: () => toast.success('Defi accepte'),
-      onError: () => toast.error('Impossible d\'accepter le defi'),
+      onSuccess: () => toast.success('Défi accepté'),
+      onError: (error) => {
+        const problem = getProblemDetails(error)
+        toast.error(problem ? problem.detail : "Impossible d'accepter le défi")
+      },
     })
   }
 
   const onDeclineChallenge = (challengeId: string) => {
     declineChallenge.mutate(challengeId, {
-      onSuccess: () => toast.success('Defi refuse'),
-      onError: () => toast.error('Impossible de refuser le defi'),
+      onSuccess: () => toast.success('Défi refusé'),
+      onError: (error) => {
+        const problem = getProblemDetails(error)
+        toast.error(problem ? problem.detail : 'Impossible de refuser le défi')
+      },
     })
   }
 
   return (
     <div className="grid gap-6 xl:grid-cols-2">
       <section className="flex flex-col gap-3 rounded-lg border p-4">
-        <h2 className="text-xl font-semibold">Reseau</h2>
+        <h2 className="text-xl font-semibold">Réseau</h2>
         <SearchInput onDebouncedChange={setFriendTerm} placeholder="Filtrer par userId" />
 
         {friendships.data?.content.map((friendship) => (
           <div key={friendship.friendshipId} className="rounded-lg border p-3">
-            <p className="font-medium">Amitie {friendship.friendshipId}</p>
+            <p className="font-medium">Amitié {friendship.friendshipId}</p>
             <p className="text-sm text-muted-foreground">
               {friendship.userId1} vs {friendship.userId2}
             </p>
@@ -127,9 +137,9 @@ export default function SocialPage() {
 
         {challenges.data?.content.map((challenge) => (
           <div key={challenge.challengeId} className="rounded-lg border p-3">
-            <p className="font-medium">Defi {challenge.challengeId}</p>
-            <p className="text-sm text-muted-foreground">Etat: {challenge.status}</p>
-            <p className="text-sm text-muted-foreground">Topic: {challenge.topicId}</p>
+            <p className="font-medium">Défi {challenge.challengeId}</p>
+            <p className="text-sm text-muted-foreground">État : {challenge.status}</p>
+            <p className="text-sm text-muted-foreground">Topic : {challenge.topicId}</p>
             <p className="text-sm text-muted-foreground">
               {challenge.challengerId} {'->'} {challenge.challengedId}
             </p>
@@ -167,5 +177,3 @@ export default function SocialPage() {
     </div>
   )
 }
-
-

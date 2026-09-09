@@ -53,4 +53,3 @@ export interface SearchRequest {
   sorts?: SortRequest[]
   page?: PageRequest
 }
-

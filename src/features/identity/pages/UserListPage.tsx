@@ -29,7 +29,11 @@ export default function UserListPage() {
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold">Utilisateurs</h2>
       <SearchInput onDebouncedChange={setTerm} placeholder="Rechercher par email" />
-      <div className="grid gap-3">{data?.content.map((user) => <UserCard key={user.userId} user={user} />)}</div>
+      <div className="grid gap-3">
+        {data?.content.map((user) => (
+          <UserCard key={user.userId} user={user} />
+        ))}
+      </div>
       <PaginationControls
         pageNumber={data ? data.pageNumber : page.number}
         totalPages={data?.totalPages ?? 1}
@@ -41,4 +45,3 @@ export default function UserListPage() {
     </div>
   )
 }
-
