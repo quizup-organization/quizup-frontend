@@ -29,7 +29,8 @@ export interface TopicResponse {
   status: TopicStatus
   creatorId: string
   updatedBy: string
-  questionCount: number
+  followersCounter: number
+  questionsCounter: Record<QuestionStatus, number>
   createdAt: string
   updatedAt: string
 }

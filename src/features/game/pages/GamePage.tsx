@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { useMe } from '@/features/identity/api/identity.queries'
 import { useParams } from 'react-router-dom'
-import { useAnswerQuestion, useCancelGame, useGame, useGameNotifications, useJoinGame } from '../api/game.queries'
+import { useAnswerQuestion, useGame, useGameNotifications, useJoinGame } from '../api/game.queries'
 import { useGameWebSocket } from '../hooks/use-game-websocket'
 import { useGameStore } from '../stores/game.store'
 import type { GameNotificationPayload, QuestionChoice } from '../types/game.types'
@@ -16,7 +16,6 @@ export default function GamePage() {
 
   const joinGame = useJoinGame()
   const answerQuestion = useAnswerQuestion(gameId)
-  const cancelGame = useCancelGame()
 
   const processedNotificationsRef = useRef(0)
 
@@ -112,16 +111,6 @@ export default function GamePage() {
     )
   }
 
-  const onCancel = () => {
-    cancelGame.mutate(
-      { gameId },
-      {
-        onSuccess: () => toast.success('Partie annulee'),
-        onError: () => toast.error('Annulation impossible'),
-      },
-    )
-  }
-
   const status = currentGame?.status ?? data?.status
   const canJoin = status === 'CREATED' || status === 'READY'
   const canAnswer = Boolean(currentQuestion) && !hasAnswered && status === 'IN_PROGRESS'
@@ -208,7 +197,7 @@ export default function GamePage() {
             <p className="mt-2 text-lg font-black">Forfait</p>
             <p className="text-sm text-zinc-400">L'adversaire a quitte la partie.</p>
             <div className="mt-4 flex gap-2">
-              <Button className="flex-1 bg-red-600 text-white hover:bg-red-500" onClick={onCancel} disabled>
+              <Button className="flex-1 bg-red-600 text-white hover:bg-red-500" disabled>
                 Partie annulee
               </Button>
             </div>
@@ -365,14 +354,6 @@ export default function GamePage() {
           <div className="mt-auto flex gap-2 px-3 pb-4">
             <Button className="flex-1 bg-zinc-800 text-zinc-100 hover:bg-zinc-700" onClick={onJoin} disabled={!canJoin || joinGame.isPending}>
               Rejoindre
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1 border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800"
-              onClick={onCancel}
-              disabled={cancelGame.isPending}
-            >
-              Annuler
             </Button>
           </div>
         </>

@@ -12,8 +12,6 @@ const GamePage = lazy(() => import('@/features/game/pages/GamePage'))
 const MatchmakingPage = lazy(() => import('@/features/matchmaking/pages/MatchmakingPage'))
 const LobbyWaitingPage = lazy(() => import('@/features/matchmaking/pages/LobbyWaitingPage'))
 const SocialPage = lazy(() => import('@/features/social/pages/SocialPage'))
-const MyProfilePage = lazy(() => import('@/features/profile/pages/MyProfilePage'))
-const UserProfilePage = lazy(() => import('@/features/profile/pages/UserProfilePage'))
 const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPage'))
 
 export function AppRouter() {
@@ -39,8 +37,6 @@ export function AppRouter() {
           <Route path="social" element={<SocialPage />} />
           <Route path="friends" element={<Navigate to="/social" replace />} />
           <Route path="challenges" element={<Navigate to="/social" replace />} />
-          <Route path="profile" element={<MyProfilePage />} />
-          <Route path="profile/:userId" element={<UserProfilePage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

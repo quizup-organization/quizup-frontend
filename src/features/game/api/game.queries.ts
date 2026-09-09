@@ -65,12 +65,3 @@ export function useAnswerQuestion(gameId: string) {
   })
 }
 
-export function useCancelGame() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: ({ gameId, reason }: { gameId: string; reason?: string }) => gameApi.cancelGame(gameId, reason),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['games'] }),
-  })
-}
-

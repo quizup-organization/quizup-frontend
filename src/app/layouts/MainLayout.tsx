@@ -2,7 +2,6 @@ import {
   BookOpen,
   Gamepad2,
   Swords,
-  User,
   Users,
 } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
@@ -16,7 +15,6 @@ const navItems = [
   { to: '/matchmaking', label: 'Matchmaking', icon: Swords },
   { to: '/games', label: 'Parties', icon: Gamepad2 },
   { to: '/social', label: 'Social', icon: Users },
-  { to: '/profile', label: 'Profil', icon: User },
 ]
 
 export function MainLayout() {

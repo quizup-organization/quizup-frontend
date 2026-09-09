@@ -9,7 +9,7 @@
 ## 1. Rôle
 
 Application frontend de QuizUp : découverte de topics, création/modération de questions, parties
-de quiz (bot/lobby), matchmaking, défis, amis, profil. **Tous** les appels HTTP passent par le **gateway API**
+de quiz (bot/lobby), matchmaking, défis, amis. **Tous** les appels HTTP passent par le **gateway API**
 (`quizup-gateway`).
 
 **Stack** : React 19, TypeScript, Vite 8, Tailwind 4 (plugin vite), shadcn/ui (style `base-nova`),
@@ -28,7 +28,6 @@ src/
 │   ├── game/            ← partie de quiz
 │   ├── identity/        ← utilisateurs
 │   ├── matchmaking/     ← lobbies
-│   ├── profile/         ← profil (progression, médailles)
 │   ├── social/          ← amis + défis (challenges)
 │   └── theme/           ← topics + questions (+ schemas/ zod)
 ├── shared/
@@ -65,15 +64,14 @@ re-wrapper ces fonctions en React Query (queryKey/invalidation).
 
 ## 4. Endpoints appelés par feature
 
-| Feature         | Préfixe                           | Endpoints                                                                                                                                                                                                                                                                            |
-|-----------------|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **auth**        | (OIDC)                            | authority `VITE_OIDC_BASE_URL`, client `VITE_OIDC_CLIENT_ID`, redirect `{origin}/auth/callback`                                                                                                                                                                                      |
-| **game**        | `/game-service/api`               | POST `/games`, GET `/games/{id}`, GET `/games/{id}/notifications`, POST `/games/{id}/join`, POST `/games/{id}/answer`, POST `/games/{id}/cancel?reason=`, POST `/games/search`                                                                                                       |
-| **identity**    | `/identity-service/api`           | GET `/users/{id}`, POST `/users/search`, GET `/authentication/me`                                                                                                                                                                                                                    |
-| **matchmaking** | `/matchmaking-service/api`        | POST `/lobbies/search`, POST `/lobbies`, GET `/lobbies/{id}`, GET `/lobbies/{id}/notifications`, POST `/lobbies/{id}/join`, DELETE `/lobbies/{id}`                                                                                                                                   |
-| **profile**     | `/user-service/api/profile/users` | GET `/{userId}/progress`, GET `/{userId}/medals`                                                                                                                                                                                                                                     |
-| **social**      | `/social-service/api`             | POST `/friend-requests`, POST `/friend-requests/search`, POST `/friend-requests/{id}/accept\|reject\|cancel`, POST `/friendships/search`, DELETE `/friendships/{id}`, POST `/challenges`, GET `/challenges/{id}`, POST `/challenges/search`, POST `/challenges/{id}/accept\|decline` |
-| **theme**       | `/theme-service/api`              | POST `/topics/search`, GET `/topics/{id}`, POST `/topics`, POST `/topics/{id}/publish`, POST `/questions/search`, GET `/questions/{id}`, POST `/questions`, POST `/questions/{id}/approve\|reject`                                                                                   |
+| Feature         | Préfixe                    | Endpoints                                                                                                                                                                                                                                                                            |
+|-----------------|----------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **auth**        | (OIDC)                     | authority `VITE_OIDC_BASE_URL`, client `VITE_OIDC_CLIENT_ID`, redirect `{origin}/auth/callback`                                                                                                                                                                                      |
+| **game**        | `/game-service/api`        | POST `/games`, GET `/games/{id}`, GET `/games/{id}/notifications`, POST `/games/{id}/join`, POST `/games/{id}/answer`, POST `/games/search`                                                                                                                                          |
+| **identity**    | `/identity-service/api`    | GET `/users/{id}`, POST `/users/search`, GET `/authentication/me`                                                                                                                                                                                                                    |
+| **matchmaking** | `/matchmaking-service/api` | POST `/lobbies/search`, POST `/lobbies`, GET `/lobbies/{id}`, GET `/lobbies/{id}/notifications`, POST `/lobbies/{id}/join`, DELETE `/lobbies/{id}`                                                                                                                                   |
+| **social**      | `/social-service/api`      | POST `/friend-requests`, POST `/friend-requests/search`, POST `/friend-requests/{id}/accept\|reject\|cancel`, POST `/friendships/search`, DELETE `/friendships/{id}`, POST `/challenges`, GET `/challenges/{id}`, POST `/challenges/search`, POST `/challenges/{id}/accept\|decline` |
+| **theme**       | `/theme-service/api`       | POST `/topics/search`, GET `/topics/{id}`, POST `/topics`, POST `/topics/{id}/publish`, POST `/questions/search`, GET `/questions/{id}`, POST `/questions`, POST `/questions/{id}/approve\|reject`                                                                                   |
 
 ---
 
@@ -99,23 +97,3 @@ Pas de `.env`/`.env.example` dans le repo — variables référencées en code :
 - `VITE_OIDC_CLIENT_ID` — client OIDC
 
 **Vite dev** : port `3000`, proxy `/api` → `localhost:8080`, `/ws` → `localhost:8080` (ws:true).
-
----
-
-## 7. Contrats cassés / TODO
-
-| # | Contrats cassé                            | Détail                                                                                                                                                                                              |
-|---|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1 | **`/user-service/api/profile/...`**       | Appelé par `profile.queries.ts` (`/{id}/progress`, `/{id}/medals`) mais **aucun service** `user-service`/`profile` dans `services/`. Route gateway présente mais pointe vers un service inexistant. |
-| 2 | **`questionCount` vs `questionsCounter`** | `theme.types.ts` déclare `questionCount: number`, mais le backend `TopicResponse` renvoie `questionsCounter: Map<QuestionStatus,Integer>` (+ `followersCounter`).                                   |
-| 3 | **`name` (mineur)**                       | `identity.types.ts` ne déclare pas `name`, alors que le backend `UserResponse` l'expose.                                                                                                            |
-
-> Voir aussi : `services/quizup-gateway/AGENTS.md` §3 (routes manquantes), `services/quizup-theme/AGENTS.md` §5
-> (questionCount).
-
----
-
-## 8. Patterns de référence
-
-Ce frontend est **hors périmètre** de l'architecture hexagonale Java. Patterns backend :
-[`../../best-practices/hexagonal-architecture.md`](../../best-practices/hexagonal-architecture.md).
