@@ -25,12 +25,11 @@ src/
 ├── app/                 ← bootstrap (App.tsx), providers.tsx, router.tsx (lazy), layouts/
 ├── features/            ← vertical slices par domaine
 │   ├── auth/            ← OIDC (oidc.config.ts, ProtectedRoute, AuthCallbackPage, use-auth-sync)
-│   ├── challenge/       ← défis 1v1
 │   ├── game/            ← partie de quiz
 │   ├── identity/        ← utilisateurs
 │   ├── matchmaking/     ← lobbies
 │   ├── profile/         ← profil (progression, médailles)
-│   ├── social/          ← amis
+│   ├── social/          ← amis + défis (challenges)
 │   └── theme/           ← topics + questions (+ schemas/ zod)
 ├── shared/
 │   ├── api/             ← axios-instance.ts, query-client.ts
@@ -66,16 +65,15 @@ re-wrapper ces fonctions en React Query (queryKey/invalidation).
 
 ## 4. Endpoints appelés par feature
 
-| Feature         | Préfixe                           | Endpoints                                                                                                                                                                                          |
-|-----------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **auth**        | (OIDC)                            | authority `VITE_OIDC_BASE_URL`, client `VITE_OIDC_CLIENT_ID`, redirect `{origin}/auth/callback`                                                                                                    |
-| **challenge**   | `/challenge-service/api`          | POST `/challenges`, GET `/challenges/{id}`, POST `/challenges/search`, POST `/challenges/{id}/accept`, POST `/challenges/{id}/decline`                                                             |
-| **game**        | `/game-service/api`               | POST `/games`, GET `/games/{id}`, GET `/games/{id}/notifications`, POST `/games/{id}/join`, POST `/games/{id}/answer`, POST `/games/{id}/cancel?reason=`, POST `/games/search`                     |
-| **identity**    | `/identity-service/api`           | GET `/users/{id}`, POST `/users/search`, GET `/authentication/me`                                                                                                                                  |
-| **matchmaking** | `/matchmaking-service/api`        | POST `/lobbies/search`, POST `/lobbies`, GET `/lobbies/{id}`, GET `/lobbies/{id}/notifications`, POST `/lobbies/{id}/join`, DELETE `/lobbies/{id}`                                                 |
-| **profile**     | `/user-service/api/profile/users` | GET `/{userId}/progress`, GET `/{userId}/medals`                                                                                                                                                   |
-| **social**      | `/social-service/api`             | POST `/friend-requests`, POST `/friend-requests/search`, POST `/friend-requests/{id}/accept\|reject\|cancel`, POST `/friendships/search`, DELETE `/friendships/{id}`                               |
-| **theme**       | `/theme-service/api`              | POST `/topics/search`, GET `/topics/{id}`, POST `/topics`, POST `/topics/{id}/publish`, POST `/questions/search`, GET `/questions/{id}`, POST `/questions`, POST `/questions/{id}/approve\|reject` |
+| Feature         | Préfixe                           | Endpoints                                                                                                                                                                                                                                                                            |
+|-----------------|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **auth**        | (OIDC)                            | authority `VITE_OIDC_BASE_URL`, client `VITE_OIDC_CLIENT_ID`, redirect `{origin}/auth/callback`                                                                                                                                                                                      |
+| **game**        | `/game-service/api`               | POST `/games`, GET `/games/{id}`, GET `/games/{id}/notifications`, POST `/games/{id}/join`, POST `/games/{id}/answer`, POST `/games/{id}/cancel?reason=`, POST `/games/search`                                                                                                       |
+| **identity**    | `/identity-service/api`           | GET `/users/{id}`, POST `/users/search`, GET `/authentication/me`                                                                                                                                                                                                                    |
+| **matchmaking** | `/matchmaking-service/api`        | POST `/lobbies/search`, POST `/lobbies`, GET `/lobbies/{id}`, GET `/lobbies/{id}/notifications`, POST `/lobbies/{id}/join`, DELETE `/lobbies/{id}`                                                                                                                                   |
+| **profile**     | `/user-service/api/profile/users` | GET `/{userId}/progress`, GET `/{userId}/medals`                                                                                                                                                                                                                                     |
+| **social**      | `/social-service/api`             | POST `/friend-requests`, POST `/friend-requests/search`, POST `/friend-requests/{id}/accept\|reject\|cancel`, POST `/friendships/search`, DELETE `/friendships/{id}`, POST `/challenges`, GET `/challenges/{id}`, POST `/challenges/search`, POST `/challenges/{id}/accept\|decline` |
+| **theme**       | `/theme-service/api`              | POST `/topics/search`, GET `/topics/{id}`, POST `/topics`, POST `/topics/{id}/publish`, POST `/questions/search`, GET `/questions/{id}`, POST `/questions`, POST `/questions/{id}/approve\|reject`                                                                                   |
 
 ---
 
@@ -86,8 +84,9 @@ re-wrapper ces fonctions en React Query (queryKey/invalidation).
   Singleton, reconnectDelay 5 s, heartbeats in/out 4 s.
 - **Hook** : `use-stomp-subscription({destination, onMessage, enabled})` — JSON.parse, cleanup.
 - **Destinations** (brokered `/topic/...`) :
-    - `/topic/friend-requests/{userId}`, `/topic/friend-accepted/{userId}` (social)
-    - `/topic/challenges/{challengeId}` (challenge)
+    - `/topic/social/{userId}` (amis, demandes d'amitié, amitiés)
+    - `/topic/games/{gameId}` (parties)
+    - `/topic/lobbies/{lobbyId}` (matchmaking)
 
 ---
 
@@ -107,13 +106,12 @@ Pas de `.env`/`.env.example` dans le repo — variables référencées en code :
 
 | # | Contrats cassé                            | Détail                                                                                                                                                                                              |
 |---|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1 | **`/challenge-service/api`**              | Appelé par `challenge.api.ts` mais **pas de route** gateway `challenge-service` (service réel = `social-service`). **Inatteignable.** → corriger gateway ou frontend.                               |
-| 2 | **`/user-service/api/profile/...`**       | Appelé par `profile.queries.ts` (`/{id}/progress`, `/{id}/medals`) mais **aucun service** `user-service`/`profile` dans `services/`. Route gateway présente mais pointe vers un service inexistant. |
-| 3 | **`questionCount` vs `questionsCounter`** | `theme.types.ts` déclare `questionCount: number`, mais le backend `TopicResponse` renvoie `questionsCounter: Map<QuestionStatus,Integer>` (+ `followersCounter`).                                   |
-| 4 | **`name` (mineur)**                       | `identity.types.ts` ne déclare pas `name`, alors que le backend `UserResponse` l'expose.                                                                                                            |
+| 1 | **`/user-service/api/profile/...`**       | Appelé par `profile.queries.ts` (`/{id}/progress`, `/{id}/medals`) mais **aucun service** `user-service`/`profile` dans `services/`. Route gateway présente mais pointe vers un service inexistant. |
+| 2 | **`questionCount` vs `questionsCounter`** | `theme.types.ts` déclare `questionCount: number`, mais le backend `TopicResponse` renvoie `questionsCounter: Map<QuestionStatus,Integer>` (+ `followersCounter`).                                   |
+| 3 | **`name` (mineur)**                       | `identity.types.ts` ne déclare pas `name`, alors que le backend `UserResponse` l'expose.                                                                                                            |
 
-> Voir aussi : `services/quizup-gateway/AGENTS.md` §3 (routes manquantes), `services/quizup-social/AGENTS.md` §5
-> (challenge), `services/quizup-theme/AGENTS.md` §5 (questionCount).
+> Voir aussi : `services/quizup-gateway/AGENTS.md` §3 (routes manquantes), `services/quizup-theme/AGENTS.md` §5
+> (questionCount).
 
 ---
 
